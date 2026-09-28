@@ -3,21 +3,83 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Agenda de Equipamentos</title>
+    <title>Agenda de Equipamentos - UTFPR</title>
     <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; margin: 20px; background-color: #f4f7f6; color: #333; }
-        h1 { color: #2c5e46; }
-        .calendar-wrapper { border: 1px solid #dee2e6; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.08); overflow: hidden; }
-        .custom-controls { background-color: #ffffff; padding: 15px 20px; display: flex; align-items: center; gap: 15px; border-bottom: 1px solid #dee2e6; flex-wrap: wrap; }
-        .custom-controls label { font-weight: bold; color: #333; }
-        .custom-controls select { padding: 8px 12px; border-radius: 5px; border: 1px solid #ced4da; min-width: 250px; flex-grow: 1; }
-        .google-calendar-container { position: relative; width: 100%; padding-top: 75%; }
-        .google-calendar-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+            margin: 20px; 
+            background-color: #f8f9fa; 
+            color: #1a1a1a; 
+        }
+        
+        /* Título com a identidade e faixa amarela da UTFPR */
+        h1 { 
+            color: #000000; 
+            border-left: 6px solid #ffc000; 
+            padding-left: 12px;
+            font-size: 1.8rem;
+        }
+
+        .calendar-wrapper { 
+            border: 1px solid #e0e0e0; 
+            border-radius: 8px; 
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); 
+            overflow: hidden; 
+            background-color: #ffffff;
+        }
+
+        /* Controles com as cores institucionais */
+        .custom-controls { 
+            background-color: #1a1a1a; 
+            color: #ffffff;
+            padding: 15px 20px; 
+            display: flex; 
+            align-items: center; 
+            gap: 15px; 
+            flex-wrap: wrap; 
+        }
+
+        .custom-controls label { 
+            font-weight: 600; 
+            color: #ffc000; /* Amarelo UTFPR */
+        }
+
+        .custom-controls select { 
+            padding: 9px 12px; 
+            border-radius: 5px; 
+            border: 1px solid #444; 
+            background-color: #ffffff;
+            color: #1a1a1a;
+            min-width: 250px; 
+            flex-grow: 1; 
+            font-size: 0.95rem;
+            outline: none;
+        }
+
+        .custom-controls select:focus {
+            border-color: #ffc000;
+            box-shadow: 0 0 0 2px rgba(255, 192, 0, 0.4);
+        }
+
+        .google-calendar-container { 
+            position: relative; 
+            width: 100%; 
+            padding-top: 75%; 
+        }
+
+        .google-calendar-container iframe { 
+            position: absolute; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            border: 0; 
+        }
     </style>
 </head>
 <body>
 
-    <h1>Agenda de Equipamentos</h1>
+    <h1>Agenda de Equipamentos - Labmult</h1>
 
     <div class="calendar-wrapper">
         <div class="custom-controls">
@@ -32,13 +94,14 @@
     </div>
 
     <script>
-        // --- MAPEAMENTO FINAL COM NOMES, IDs E CORES ---
+        // --- MAPEAMENTO DE EQUIPAMENTOS ---
+        // Observação: Para remover qualquer item, basta apagar/comentar a linha inteira.
         const calendars = {
-            "todos": "https://calendar.google.com/calendar/embed?height=700&wkst=1&ctz=America%2FSao_Paulo&showPrint=0&hl=pt_BR&showNav=1&showDate=1&showTabs=1&showCalendars=0&showTitle=0&src=bGFibXVsdGlsZEBnbWFpbC5jb20&src=Mm02N3ZvNWE5OGdhZmlqZG5kOXVscGZpc3NAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ&src=NjI1MzM0MGVmNmQ5YTA3ZGM5YTU0NWEyNzBjNmY2MGI0NDk3Nzg3OWViY2NhZDEyYjA0ODQzY2ZkYjA5MDk2OEBncm91cC5jYWxlbmRhci5nb29vZ2xlLmNvbQ&src=OGhmOW80MmRwbGh2MmVkaGdiZWtuczE3OGdAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ&src=ZG44MTdsc2Z0NTNvMG9taGI5bzMwczFmYjRAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ&src=dHRtOHBuMW1zN2prdTdjY25zc2t2aW1iYjRAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ&src=MTZyZTBiM3A3a2JpcjcwdW1tY2hwaGo3dDhAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ&src=OXVrYTk3M2h1N2djbW5oaGg5YmpmNGNnaDBAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ&src=ZnVhazkwamF1bWNncXRjNmg1amg2MGpoZnNAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ&src=c29kNjNrMGVhOTV0OXFmbTA2aWl0ZGpwOWtAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ&src=cHRrb3JsYjcxanMwOTVtcWY0ZXAxMnRxN3NAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ&src=NnB1aGM4NWphZ2Nxbzg4OXUwZ3V1dDQ0dXNAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ&src=MjByZWtjc21iMWNxNjFuaTJiNXNvcDRlZWdAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ&src=YWpnczBlNmFqMWw4bWhxOTU0NTNidjBxa2tAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ&src=bWQ1ZzZxZ2xvbmxwa3A2YWNuM3M5MDVuNWtAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ&src=MGJhMmZlMjg1NDk4MzU5M2VkNmUzY2ZkZWQ4OWJlNGI1MWY4NDFmN2FiYmIyMjI5YTk4N2Y4NTQ2MGNjYjVlN0Bncm91cC5jYWxlbmRhci5nb29vZ2xlLmNvbQ&src=MmEwM2M2ZGI3Yzg0NzQ1YzljMmU0NGZlYTc2OTg0MjY0ZmRlYmFiYWE1NTBkMTcxYWRkZmE1MTU4ZTI0NjUwZEBncm91cC5jYWxlbmRhci5nb29vZ2xlLmNvbQ&src=MXJlZjdiYWRhcnMwdTBpYjNqaTE2MjVqNWdAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ&src=bGIwYjlkc3U3OWJqOHZyNjFlYzV0ZjRlMDhAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ&src=c3MzNmRyMGhtNDdzMXNkbWtmazZlYm10dWtAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ&src=bDI5M3FtMHNvZjM2YmIxazduZ3FkZ3FjbDhAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ&src=aHVjMHRlZTBwcm9mYTMwYTQxOHRvbTQzOWNAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ&src=bWNmcGs5bmtwOGhuaDA4ZW00ZzVkMGNxdGtAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ&src=bGliZGcxZTJnNWd1ZDQ1am5hZW5lbGJ2ZWNAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ&src=bnJ1YmRiNjJlYzRiNmc4N2M2MWp1ZXMyOGNAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ&src=YWwyOTN0MHQ3aHZ2amMwZ2dlZDR1cjFxdWtAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ&color=%23000000&color=%23f09300&color=%23b39ddb&color=%237cb342&color=%233f51b5&color=%23d81b60&color=%239e69af&color=%23f4511e&color=%23b39ddb&color=%23e67c73&color=%23e8059c&color=%23795548&color=%23af6998&color=%23e4c441&color=%234285f4&color=%23ef6c00&color=%23b0ffda&color=%2333b679&color=%238e24aa&color=%23d50000&color=%23e4c441&color=%23e67c73&color=%237986cb&color=%23d50000&color=%23f09300&color=%23795548",
-            "Laboratório Multiusuário UTFPr Londrina": { id: "labmultild@gmail.com", color: "#000000" },
-            "Analisador de Partículas DLS": { id: "irkoj16pkr0gs568et94h2o9h8@group.calendar.google.com", color: "#f09300" }, // Cor baseada na ordem original
+            "todos": "https://calendar.google.com/calendar/embed?height=700&wkst=1&ctz=America%2FSao_Paulo&showPrint=0&hl=pt_BR&showNav=1&showDate=1&showTabs=1&showCalendars=0&showTitle=0&src=bGFibXVsdGlsZEBnbWFpbC5jb20&src=Mm02N3ZvNWE5OGdhZmlqZG5kOXVscGZpc3NAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ&src=NjI1MzM0MGVmNmQ5YTA3ZGM5YTU0NWEyNzBjNmY2MGI0NDk3Nzg3OWViY2NhZDEyYjA0ODQzY2ZkYjA5MDk2OEBncm91cC5jYWxlbmRhci5nb29vZ2xlLmNvbQ&src=OGhmOW80MmRwbGh2MmVkaGdiZWtuczE3OGdAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ&src=ZG44MTdsc2Z0NTNvMG9taGI5bzMwczFmYjRAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ&src=dHRtOHBuMW1zN2prdTdjY25zc2t2aW1iYjRAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ&src=MTZyZTBiM3A3a2JpcjcwdW1tY2hwaGo3dDhAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ&src=OXVrYTk3M2h1N2djbW5oaGg5YmpmNGNnaDBAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ&src=ZnVhakkwamF1bWNncXRjNmg1amg2MGpoZnNAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ&src=c29kNjNrMGVhOTV0OXFmbTA2aWl0ZGpwOWtAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ&src=cHRrb3JsYjcxanMwOTVtcWY0ZXAxMnRxN3NAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ&src=NnB1aGM4NWphZ2Nxbzg4OXUwZ3V1dDQ0dXNAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ&src=MjByZWtjc21iMWNxNjFuaTJiNXNvcDRlZWdAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ&src=YWpnczBlNmFqMWw4bWhxOTU0NTNidjBxa2tAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ&src=bWQ1ZzZxZ2xvbmxwa3A2YWNuM3M5MDVuNWtAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ&src=MGJhMmZlMjg1NDk4MzU5M2VkNmUzY2ZkZWQ4OWJlNGI1MWY4NDFmN2FiYmIyMjI5YTk4N2Y4NTQ2MGNjYjVlN0Bncm91cC5jYWxlbmRhci5nb29vZ2xlLmNvbQ&src=MmEwM2M2ZGI3Yzg0NzQ1YzljMmU0NGZlYTc2OTg0MjY0ZmRlYmFiYWE1NTBkMTcxYWRkZmE1MTU4ZTI0NjUwZEBncm91cC5jYWxlbmRhci5nb29vZ2xlLmNvbQ&src=MXJlZjdiYWRhcnMwdTBpYjNqaTE2MjVqNWdAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ&src=bLB0Yjlkc3U3OWJqOHZyNjFlYzV0ZjRlMDhAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ&src=c3MzNmRyMGhtNDdzMXNkbWtmazZlYm10dWtAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ&src=bDI9M3FtMHNvZjM2YmIxazduZ3FkZ3FjbDhAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ&src=aHVjMHRlZTBwcm9mYTMwYTQxOHRvbTQzOWNAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ&src=bWNmcGs5bmtwOGhuaDA4ZW00ZzVkMGNxdGtAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ&src=bGliZGcxZTJnNWd1ZDQ1am5hZW5lbGJ2ZWNAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ&src=bnJ1YmRiNjJlYzRiNmc4N2M2MWp1ZXMyOGNAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ&src=YWwyOTN0MHQ3aHZ2amMwZ2dlZDR1cjFxdWtAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ&color=%23000000&color=%23f09300&color=%23b39ddb&color=%237cb342&color=%233f51b5&color=%23d81b60&color=%239e69af&color=%23f4511e&color=%23b39ddb&color=%23e67c73&color=%23e8059c&color=%23795548&color=%23af6998&color=%23e4c441&color=%234285f4&color=%23ef6c00&color=%23b0ffda&color=%2333b679&color=%238e24aa&color=%23d50000&color=%23e4c441&color=%23e67c73&color=%237986cb&color=%23d50000&color=%23f09300&color=%23795548",
+            "Laboratório Multiusuário UTFPR Londrina": { id: "labmultild@gmail.com", color: "#000000" },
+            // "Analisador de Partículas DLS" removido conforme solicitado
             "Banho ultrassônico": { id: "6253340ef6d9a07dc9a545a270c6f60b44977879ebccad12b04843cfdb090968@group.calendar.google.com", color: "#b39ddb" },
-            "Banho Ultratermostatizado": { id: "2m67vo5a98gafijdnd9ulpfiss@group.calendar.google.com", color: "#f09300" }, // Cor baseada na ordem original
+            "Banho Ultratermostatizado": { id: "2m67vo5a98gafijdnd9ulpfiss@group.calendar.google.com", color: "#f09300" },
             "Centrífuga de Bancada Refrigerada": { id: "8hf9o42dplhv2edhgbekns178g@group.calendar.google.com", color: "#7cb342" },
             "Cromatografo Líquido de Ultra-Performance": { id: "dn817lsft53o0omhb9o30s1fb4@group.calendar.google.com", color: "#3f51b5" },
             "Destilador de Ácido": { id: "9uka973hu7gcmnhhh9bjf4cgh0@group.calendar.google.com", color: "#9e69af" },
@@ -46,7 +109,7 @@
             "Determinador Semi-Automatizado de Fibra": { id: "fuak90jaumcgqtc6h5jh60jhfs@group.calendar.google.com", color: "#f4511e" },
             "Determinador Semi-Automatizado de Teor de Lipídeos": { id: "sod63k0ea95t9qfm06iitdjp9k@group.calendar.google.com", color: "#b39ddb" },
             "Difratômetro de Raios X": { id: "ptkorlb71js095mqf4ep12tq7s@group.calendar.google.com", color: "#e67c73" },
-            "Digestor de Proteínas": { id: "6puhc85jagcqo889u0guut44us@group.calendar.google.com", color: "#795548" }, // Cor baseada na ordem original
+            "Digestor de Proteínas": { id: "6puhc85jagcqo889u0guut44us@group.calendar.google.com", color: "#795548" },
             "Dispersor Ultra Turrax": { id: "20rekcsmb1cq61ni2b5sop4eeg@group.calendar.google.com", color: "#af6998" },
             "DLS": { id: "ttm8pn1ms7jku7ccnsskvimbb4@group.calendar.google.com", color: "#d81b60" },
             "Espectrofotômetro UV/VIS (Biochrom)": { id: "ajgs0e6aj1l8mhq95453bv0qkk@group.calendar.google.com", color: "#e4c441" },
@@ -54,7 +117,7 @@
             "Estufa de secagem com circulação de ar": { id: "0ba2fe2854983593ed6e3cfded89be4b51f841f7abbb2229a987f85460ccb5e7@group.calendar.google.com", color: "#ef6c00" },
             "Leitor de microplacas (ELISA)": { id: "2a03c6db7c84745c9c2e44fea76984264fdebabaa550d171addfa5158e24650d@group.calendar.google.com", color: "#b0ffda" },
             "Liofilizador de Bancada": { id: "1ref7badars0u0ib3ji1625j5g@group.calendar.google.com", color: "#33b679" },
-            "Medidor de pH de bancada": { id: "1f8895f088afe2ac1bea9b6b89480643f67a29a07a392125de9454cb0b42d0dd@group.calendar.google.com", color: "#7986cb" }, // Cor baseada na ordem original
+            "Medidor de pH de bancada": { id: "1f8895f088afe2ac1bea9b6b89480643f67a29a07a392125de9454cb0b42d0dd@group.calendar.google.com", color: "#7986cb" },
             "MEV": { id: "lb0b9dsu79bj8vr61ec5tf4e08@group.calendar.google.com", color: "#33b679" },
             "Microscópio Óptico Binocular": { id: "ss36dr0hm47s1sdmkfk6ebmtuk@group.calendar.google.com", color: "#8e24aa" },
             "NIR": { id: "l293qm0sof36bb1k7ngqdgqcl8@group.calendar.google.com", color: "#d50000" },
@@ -62,12 +125,12 @@
             "Processador Ultrassônico": { id: "mcfpk9nkp8hnh08em4g5d0cqtk@group.calendar.google.com", color: "#e67c73" },
             "Spray Dryer": { id: "libdg1e2g5gud45jnaenelbvec@group.calendar.google.com", color: "#d50000" },
             "Texturômetro": { id: "nrubdb62ec4b6g87c61jues28c@group.calendar.google.com", color: "#f09300" },
-            "Ultrapurificador de Água": { id: "me2cpfghnfiljq4islt86cvb4c@group.calendar.google.com", color: "#795548" }, // Cor baseada na ordem original
+            "Ultrapurificador de Água": { id: "me2cpfghnfiljq4islt86cvb4c@group.calendar.google.com", color: "#795548" },
             "Uv-Vis (Kasuaki)": { id: "130517e4daef6f74fc649b54ca1a5acbb9a8b456318dee39091dd333b5587395@group.calendar.google.com", color: "#9e69af" },
             "Viscosímetro Rotacional": { id: "al293t0t7hvvjc0gged4ur1quk@group.calendar.google.com", color: "#795548" }
         };
 
-        // --- LÓGICA AUTOMÁTICA (NÃO PRECISA EDITAR DAQUI PARA BAIXO) ---
+        // --- LÓGICA AUTOMÁTICA ---
         const selectElement = document.getElementById('equipamento-select');
         const calendarIframe = document.getElementById('calendar-iframe');
 
@@ -89,7 +152,7 @@
                 const baseUrl = "https://calendar.google.com/calendar/embed?";
                 const params = new URLSearchParams({
                     src: calendarInfo.id,
-                    color: calendarInfo.color, // <-- Adicionado o parâmetro da cor
+                    color: calendarInfo.color,
                     ctz: "America/Sao_Paulo",
                     hl: "pt_BR",
                     showTitle: 0,
